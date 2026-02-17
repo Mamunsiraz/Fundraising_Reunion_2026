@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expenditure Dashboard</title>
+    <title>Donation Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         /* ── NAVBAR ─────────────────────────────────────────────── */
         .navbar {
             background: rgba(255, 255, 255, 0.97);
@@ -16,20 +29,25 @@
             top: 0;
             z-index: 1000;
         }
+
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 40px;
         }
+
+        /* Top row: logo + desktop-menu + hamburger */
         .nav-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 72px;
         }
+
         .logo {
             font-size: 24px;
             font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -43,11 +61,14 @@
             font-size: 32px;
             -webkit-text-fill-color: initial;
         }
+
+        /* Desktop menu — sits inline in .nav-top */
         .nav-menu-desktop {
             display: flex;
             gap: 8px;
             list-style: none;
         }
+
         .nav-link {
             text-decoration: none;
             color: #1e293b;
@@ -59,6 +80,12 @@
             white-space: nowrap;
         }
         .nav-link:hover { background: #f1f5f9; }
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* Hamburger button — hidden on desktop */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -80,17 +107,22 @@
             border-radius: 3px;
             transition: all 0.3s ease;
         }
+        /* Hamburger → X animation */
         .menu-toggle.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .menu-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* Mobile dropdown — sits BELOW nav-top, inside .navbar
+           so it pushes the page DOWN, not over it               */
         .nav-menu-mobile {
             list-style: none;
             overflow: hidden;
             max-height: 0;
             transition: max-height 0.35s ease, padding 0.35s ease;
+            border-top: 0px solid #e2e8f0;
         }
         .nav-menu-mobile.active {
-            max-height: 400px;
+            max-height: 400px;           /* tall enough for all items */
             padding-bottom: 12px;
             border-top: 1px solid #e2e8f0;
         }
@@ -105,928 +137,236 @@
             border-radius: 8px;
             margin: 4px 12px;
         }
-        @media (max-width: 768px) {
-            .nav-container    { padding: 0 20px; }
-            .nav-menu-desktop { display: none; }
-            .menu-toggle      { display: flex; }
-        }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
-
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .dashboard-header {
-            background: white;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .header-left h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-left p {
-            color: #64748b;
-            font-size: 16px;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 12px;
-        }
-
-        .period-selector {
-            padding: 10px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            background: white;
-            font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .period-selector:hover,
-        .period-selector.active {
-            border-color: #ef4444;
-            color: #ef4444;
-            background: #fef2f2;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-            border-left: 4px solid;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
-            border-radius: 50%;
-            transform: translate(30%, -30%);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .stat-card.expense {
-            border-left-color: #ef4444;
-        }
-
-        .stat-card.remaining {
-            border-left-color: #10b981;
-        }
-
-        .stat-card.budget {
-            border-left-color: #3b82f6;
-        }
-
-        .stat-card.projects {
-            border-left-color: #8b5cf6;
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .stat-icon {
-            font-size: 24px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-
-        .stat-change {
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .stat-change.positive {
-            color: #10b981;
-        }
-
-        .stat-change.negative {
-            color: #ef4444;
-        }
-
-        .chart-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .chart-card.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .chart-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .category-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .category-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .category-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .category-name {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 15px;
-        }
-
-        .category-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+        /* ── HERO ────────────────────────────────────────────────── */
+        .hero {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            padding: 60px 20px;
         }
 
-        .category-amount {
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            animation: fadeInUp 1.2s ease backwards;
+        }
+        .hero-card:nth-child(2) { animation-delay: 0.2s; }
+        .hero-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .card-title {
+            font-size: 28px;
             font-weight: 700;
             color: #1e293b;
-            font-size: 18px;
+            margin-bottom: 15px;
         }
-
-        .category-progress {
-            position: relative;
-            width: 100%;
-            height: 10px;
-            background: #e2e8f0;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .category-progress-bar {
-            height: 100%;
-            border-radius: 5px;
-            transition: width 1.5s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.4) 50%, 
-                rgba(255, 255, 255, 0) 100%);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .category-details {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
+        .card-description {
+            font-size: 16px;
             color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .card-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
-        /* Donut Chart Styles */
-        .donut-chart {
-            display: flex;
-            gap: 40px;
-            align-items: center;
+        /* ── STATS STRIP ─────────────────────────────────────────── */
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 50px;
+            animation: fadeInUp 1.4s ease backwards;
         }
-
-        .donut-container {
-            position: relative;
-            width: 280px;
-            height: 280px;
-        }
-
-        .donut-svg {
-            transform: rotate(-90deg);
-        }
-
-        .donut-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
             text-align: center;
         }
-
-        .donut-total {
-            font-size: 32px;
+        .feature-item { color: white; }
+        .feature-number {
+            font-size: 36px;
             font-weight: 700;
-            color: #1e293b;
+            margin-bottom: 10px;
         }
-
-        .donut-label {
+        .feature-label {
             font-size: 14px;
-            color: #64748b;
-            margin-top: 5px;
-        }
-
-        .donut-legend {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .legend-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .legend-item:hover {
-            background: #f1f5f9;
-            transform: translateX(5px);
-        }
-
-        .legend-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-        }
-
-        .legend-name {
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 14px;
-        }
-
-        .legend-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .legend-amount {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 16px;
-        }
-
-        .legend-percentage {
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        /* Transaction Table */
-        .transaction-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 12px;
-        }
-
-        .transaction-table thead th {
-            text-align: left;
-            padding: 12px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #64748b;
+            opacity: 0.9;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        .transaction-row {
-            background: #f8fafc;
-            transition: all 0.3s ease;
-        }
-
-        .transaction-row:hover {
-            background: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transform: scale(1.01);
-        }
-
-        .transaction-row td {
-            padding: 18px 16px;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .transaction-row td:first-child {
-            border-left: 1px solid #e2e8f0;
-            border-radius: 12px 0 0 12px;
-        }
-
-        .transaction-row td:last-child {
-            border-right: 1px solid #e2e8f0;
-            border-radius: 0 12px 12px 0;
-        }
-
-        .transaction-desc {
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 4px;
-        }
-
-        .transaction-category {
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .transaction-date {
-            color: #64748b;
+        /* ── FOOTER ──────────────────────────────────────────────── */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 20px;
+            text-align: center;
             font-size: 14px;
         }
 
-        .transaction-amount {
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        .transaction-amount.expense {
-            color: #ef4444;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-badge.completed {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-badge.pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-badge.processing {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .donut-chart {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-
-            .dashboard-header {
-                padding: 20px;
-            }
-
-            .dashboard-header h1 {
-                font-size: 24px;
-            }
-
-            .header-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .period-selector {
-                flex: 1;
-                text-align: center;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chart-card {
-                padding: 20px;
-            }
-
-            .donut-container {
-                width: 220px;
-                height: 220px;
-            }
-
-            .transaction-table {
-                font-size: 14px;
-            }
-
-            .transaction-row td {
-                padding: 12px 10px;
-            }
-        }
-
-        /* Animation */
+        /* ── ANIMATIONS ──────────────────────────────────────────── */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0);    }
         }
 
-        .stat-card,
-        .chart-card {
-            animation: fadeInUp 0.6s ease backwards;
-        }
+        /* ── MOBILE (≤ 768 px) ───────────────────────────────────── */
+        @media (max-width: 768px) {
+            .nav-container    { padding: 0 20px; }
+            .nav-menu-desktop { display: none; }     /* hide desktop menu */
+            .menu-toggle      { display: flex; }     /* show hamburger    */
 
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-        .chart-card:nth-child(1) { animation-delay: 0.5s; }
-        .chart-card:nth-child(2) { animation-delay: 0.6s; }
-        .chart-card:nth-child(3) { animation-delay: 0.7s; }
+            .hero-title       { font-size: 34px; }
+            .hero-subtitle    { font-size: 16px; }
+            .hero-cards       { grid-template-columns: 1fr; }
+            .features-grid    { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        }
     </style>
 </head>
 <body>
-    <!-- ── NAVIGATION ──────────────────────────────────────── -->
+
+    <!-- ── NAVIGATION ────────────────────────────────────────────── -->
     <nav class="navbar">
         <div class="nav-container">
+
+            <!-- Row 1: logo | desktop-links | hamburger -->
             <div class="nav-top">
-                <a href="index.html" class="logo" style="background:linear-gradient(135deg, #ef4444 0%, #f97316 100%);">Reunion 2026</a>
+                <a href="index.html" class="logo">Reunion 2026</a>
+
+                <!-- Desktop links (hidden on mobile via CSS) -->
                 <ul class="nav-menu-desktop">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="funding.html" class="nav-link">Funding</a></li>
-                    <li><a href="expenditure.html" class="nav-link active">Expenditure</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                    <li><a href="index.html"      class="nav-link active">Home</a></li>
+                    <li><a href="funding.html"     class="nav-link">Funding</a></li>
+                    <li><a href="expenditure.html" class="nav-link">Expenditure</a></li>
+                    <li><a href="contact.html"     class="nav-link">Contact</a></li>
                 </ul>
+
+                <!-- Hamburger (hidden on desktop via CSS) -->
                 <button class="menu-toggle" id="menuToggle"
                         onclick="toggleMenu()" aria-label="Toggle menu">
-                    <span></span><span></span><span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
             </div>
+
+            <!-- Row 2: mobile dropdown — expands INSIDE the navbar,
+                 pushing the rest of the page downward              -->
             <ul class="nav-menu-mobile" id="mobileMenu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="funding.html" class="nav-link">Funding</a></li>
-                    <li><a href="expenditure.html" class="nav-link active">Expenditure</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="index.html"      class="nav-link active">Home</a></li>
+                <li><a href="funding.html"     class="nav-link">Funding</a></li>
+                <li><a href="expenditure.html" class="nav-link">Expenditure</a></li>
+                <li><a href="contact.html"     class="nav-link">Contact</a></li>
             </ul>
+
         </div>
     </nav>
 
-    <div class="dashboard-container">
-        <!-- Dashboard Header -->
-        <div class="dashboard-header">
-            <div class="header-left">
-                <h1>💰 Expenditure Dashboard</h1>
-                <p>Track and analyze organizational spending and budget allocation</p>
-            </div>
-            <div class="header-right">
-                <button class="period-selector active">This Month</button>
-                <button class="period-selector">This Quarter</button>
-                <button class="period-selector">This Year</button>
-            </div>
-        </div>
+    <!-- ── HERO ──────────────────────────────────────────────────── -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Transparency in Every Penny</h1>
+            <p class="hero-subtitle">Track donations and expenditures in real-time with our comprehensive management system</p>
 
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stat-card expense">
-                <div class="stat-header">
-                    <div class="stat-label">Total Expenses</div>
-                    <div class="stat-icon">📉</div>
-                </div>
-                <div class="stat-value">$84,320</div>
-                <div class="stat-change negative">
-                    <span>↑ 12.5%</span>
-                    <span>vs last month</span>
-                </div>
+            <div class="hero-cards">
+                <a href="funding.html" class="hero-card">
+                    <span class="card-icon">💰</span>
+                    <h2 class="card-title">Funding Dashboard</h2>
+                    <p class="card-description">View our generous donors and track donation progress with interactive leaderboards and real-time statistics.</p>
+                    <span class="card-button">View Donations →</span>
+                </a>
+                <a href="expenditure.html" class="hero-card">
+                    <span class="card-icon">📊</span>
+                    <h2 class="card-title">Expenditure Dashboard</h2>
+                    <p class="card-description">Monitor how funds are utilised across programs with detailed breakdowns and category tracking.</p>
+                    <span class="card-button">View Expenses →</span>
+                </a>
             </div>
 
-            <div class="stat-card remaining">
-                <div class="stat-header">
-                    <div class="stat-label">Remaining Budget</div>
-                    <div class="stat-icon">💵</div>
-                </div>
-                <div class="stat-value">$43,130</div>
-                <div class="stat-change positive">
-                    <span>↓ 8.3%</span>
-                    <span>burn rate improved</span>
-                </div>
-            </div>
-
-            <div class="stat-card budget">
-                <div class="stat-header">
-                    <div class="stat-label">Monthly Budget</div>
-                    <div class="stat-icon">🎯</div>
-                </div>
-                <div class="stat-value">$127,450</div>
-                <div class="stat-change positive">
-                    <span>66%</span>
-                    <span>utilized</span>
-                </div>
-            </div>
-
-            <div class="stat-card projects">
-                <div class="stat-header">
-                    <div class="stat-label">Active Projects</div>
-                    <div class="stat-icon">📊</div>
-                </div>
-                <div class="stat-value">18</div>
-                <div class="stat-change positive">
-                    <span>↑ 3</span>
-                    <span>new this month</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Grid -->
-        <div class="chart-grid">
-            <!-- Expense Distribution Donut Chart -->
-            <div class="chart-card">
-                <h3 class="chart-title">📊 Expense Distribution</h3>
-                <div class="donut-chart">
-                    <div class="donut-container">
-                        <svg class="donut-svg" width="280" height="280" viewBox="0 0 280 280">
-                            <circle cx="140" cy="140" r="100" fill="none" stroke="#e2e8f0" stroke-width="40"/>
-                            <circle cx="140" cy="140" r="100" fill="none" stroke="#3b82f6" stroke-width="40" 
-                                    stroke-dasharray="188.5 628.3" stroke-dashoffset="0"/>
-                            <circle cx="140" cy="140" r="100" fill="none" stroke="#10b981" stroke-width="40" 
-                                    stroke-dasharray="157.1 628.3" stroke-dashoffset="-188.5"/>
-                            <circle cx="140" cy="140" r="100" fill="none" stroke="#f59e0b" stroke-width="40" 
-                                    stroke-dasharray="125.7 628.3" stroke-dashoffset="-345.6"/>
-                            <circle cx="140" cy="140" r="100" fill="none" stroke="#8b5cf6" stroke-width="40" 
-                                    stroke-dasharray="94.2 628.3" stroke-dashoffset="-471.3"/>
-                            <circle cx="140" cy="140" r="100" fill="none" stroke="#ef4444" stroke-width="40" 
-                                    stroke-dasharray="62.8 628.3" stroke-dashoffset="-565.5"/>
-                        </svg>
-                        <div class="donut-center">
-                            <div class="donut-total">$84.3K</div>
-                            <div class="donut-label">Total Spent</div>
-                        </div>
+            <div class="features">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-number">$127,450</div>
+                        <div class="feature-label">Total Donations</div>
                     </div>
-                    <div class="donut-legend">
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-color" style="background: #3b82f6;"></div>
-                                <div class="legend-name">Program Services</div>
-                            </div>
-                            <div class="legend-right">
-                                <div class="legend-amount">$25,200</div>
-                                <div class="legend-percentage">30%</div>
-                            </div>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-color" style="background: #10b981;"></div>
-                                <div class="legend-name">Operations</div>
-                            </div>
-                            <div class="legend-right">
-                                <div class="legend-amount">$21,080</div>
-                                <div class="legend-percentage">25%</div>
-                            </div>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-color" style="background: #f59e0b;"></div>
-                                <div class="legend-name">Salaries & Benefits</div>
-                            </div>
-                            <div class="legend-right">
-                                <div class="legend-amount">$16,864</div>
-                                <div class="legend-percentage">20%</div>
-                            </div>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-color" style="background: #8b5cf6;"></div>
-                                <div class="legend-name">Marketing</div>
-                            </div>
-                            <div class="legend-right">
-                                <div class="legend-amount">$12,648</div>
-                                <div class="legend-percentage">15%</div>
-                            </div>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-color" style="background: #ef4444;"></div>
-                                <div class="legend-name">Administrative</div>
-                            </div>
-                            <div class="legend-right">
-                                <div class="legend-amount">$8,432</div>
-                                <div class="legend-percentage">10%</div>
-                            </div>
-                        </div>
+                    <div class="feature-item">
+                        <div class="feature-number">248</div>
+                        <div class="feature-label">Active Donors</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-number">$84,320</div>
+                        <div class="feature-label">Total Expenses</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-number">18</div>
+                        <div class="feature-label">Active Projects</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Category Breakdown -->
-            <div class="chart-card">
-                <h3 class="chart-title">📂 Category Breakdown</h3>
-                <div class="category-list">
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">
-                                <div class="category-icon" style="background: #dbeafe; color: #3b82f6;">🏥</div>
-                                <span>Healthcare Programs</span>
-                            </div>
-                            <div class="category-amount">$18,500</div>
-                        </div>
-                        <div class="category-progress">
-                            <div class="category-progress-bar" style="width: 74%; background: linear-gradient(90deg, #3b82f6, #2563eb);"></div>
-                        </div>
-                        <div class="category-details">
-                            <span>74% of budget</span>
-                            <span>$6,500 remaining</span>
-                        </div>
-                    </div>
-
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">
-                                <div class="category-icon" style="background: #d1fae5; color: #10b981;">📚</div>
-                                <span>Education Initiatives</span>
-                            </div>
-                            <div class="category-amount">$15,200</div>
-                        </div>
-                        <div class="category-progress">
-                            <div class="category-progress-bar" style="width: 60%; background: linear-gradient(90deg, #10b981, #059669);"></div>
-                        </div>
-                        <div class="category-details">
-                            <span>60% of budget</span>
-                            <span>$10,133 remaining</span>
-                        </div>
-                    </div>
-
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">
-                                <div class="category-icon" style="background: #fef3c7; color: #f59e0b;">🏠</div>
-                                <span>Housing Support</span>
-                            </div>
-                            <div class="category-amount">$12,800</div>
-                        </div>
-                        <div class="category-progress">
-                            <div class="category-progress-bar" style="width: 85%; background: linear-gradient(90deg, #f59e0b, #d97706);"></div>
-                        </div>
-                        <div class="category-details">
-                            <span>85% of budget</span>
-                            <span>$2,259 remaining</span>
-                        </div>
-                    </div>
-
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">
-                                <div class="category-icon" style="background: #f3e8ff; color: #8b5cf6;">🌍</div>
-                                <span>Community Outreach</span>
-                            </div>
-                            <div class="category-amount">$10,500</div>
-                        </div>
-                        <div class="category-progress">
-                            <div class="category-progress-bar" style="width: 52%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
-                        </div>
-                        <div class="category-details">
-                            <span>52% of budget</span>
-                            <span>$9,692 remaining</span>
-                        </div>
-                    </div>
-
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">
-                                <div class="category-icon" style="background: #fee2e2; color: #ef4444;">🍎</div>
-                                <span>Food Distribution</span>
-                            </div>
-                            <div class="category-amount">$8,750</div>
-                        </div>
-                        <div class="category-progress">
-                            <div class="category-progress-bar" style="width: 43%; background: linear-gradient(90deg, #ef4444, #dc2626);"></div>
-                        </div>
-                        <div class="category-details">
-                            <span>43% of budget</span>
-                            <span>$11,599 remaining</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Transactions -->
-            <div class="chart-card full-width">
-                <h3 class="chart-title">📋 Recent Transactions</h3>
-                <table class="transaction-table">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th style="text-align: right;">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="transaction-row">
-                            <td>
-                                <div class="transaction-desc">Medical Equipment Purchase</div>
-                                <div class="transaction-category">Healthcare Programs</div>
-                            </td>
-                            <td class="transaction-date">Feb 14, 2026</td>
-                            <td>
-                                <div class="category-name">
-                                    <div class="category-icon" style="background: #dbeafe; color: #3b82f6; width: 32px; height: 32px; font-size: 16px;">🏥</div>
-                                </div>
-                            </td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td style="text-align: right;">
-                                <div class="transaction-amount expense">-$4,250</div>
-                            </td>
-                        </tr>
-                        <tr class="transaction-row">
-                            <td>
-                                <div class="transaction-desc">School Supplies & Books</div>
-                                <div class="transaction-category">Education Initiatives</div>
-                            </td>
-                            <td class="transaction-date">Feb 13, 2026</td>
-                            <td>
-                                <div class="category-name">
-                                    <div class="category-icon" style="background: #d1fae5; color: #10b981; width: 32px; height: 32px; font-size: 16px;">📚</div>
-                                </div>
-                            </td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td style="text-align: right;">
-                                <div class="transaction-amount expense">-$2,180</div>
-                            </td>
-                        </tr>
-                        <tr class="transaction-row">
-                            <td>
-                                <div class="transaction-desc">Monthly Rent Assistance</div>
-                                <div class="transaction-category">Housing Support</div>
-                            </td>
-                            <td class="transaction-date">Feb 12, 2026</td>
-                            <td>
-                                <div class="category-name">
-                                    <div class="category-icon" style="background: #fef3c7; color: #f59e0b; width: 32px; height: 32px; font-size: 16px;">🏠</div>
-                                </div>
-                            </td>
-                            <td><span class="status-badge processing">Processing</span></td>
-                            <td style="text-align: right;">
-                                <div class="transaction-amount expense">-$6,500</div>
-                            </td>
-                        </tr>
-                        <tr class="transaction-row">
-                            <td>
-                                <div class="transaction-desc">Community Event Supplies</div>
-                                <div class="transaction-category">Community Outreach</div>
-                            </td>
-                            <td class="transaction-date">Feb 10, 2026</td>
-                            <td>
-                                <div class="category-name">
-                                    <div class="category-icon" style="background: #f3e8ff; color: #8b5cf6; width: 32px; height: 32px; font-size: 16px;">🌍</div>
-                                </div>
-                            </td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td style="text-align: right;">
-                                <div class="transaction-amount expense">-$1,420</div>
-                            </td>
-                        </tr>
-                        <tr class="transaction-row">
-                            <td>
-                                <div class="transaction-desc">Weekly Food Bank Distribution</div>
-                                <div class="transaction-category">Food Distribution</div>
-                            </td>
-                            <td class="transaction-date">Feb 09, 2026</td>
-                            <td>
-                                <div class="category-name">
-                                    <div class="category-icon" style="background: #fee2e2; color: #ef4444; width: 32px; height: 32px; font-size: 16px;">🍎</div>
-                                </div>
-                            </td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td style="text-align: right;">
-                                <div class="transaction-amount expense">-$3,890</div>
-                            </td>
-                        </tr>
-                        <tr class="transaction-row">
-                            <td>
-                                <div class="transaction-desc">Staff Training Workshop</div>
-                                <div class="transaction-category">Operations</div>
-                            </td>
-                            <td class="transaction-date">Feb 08, 2026</td>
-                            <td>
-                                <div class="category-name">
-                                    <div class="category-icon" style="background: #dbeafe; color: #3b82f6; width: 32px; height: 32px; font-size: 16px;">👥</div>
-                                </div>
-                            </td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td style="text-align: right;">
-                                <div class="transaction-amount expense">-$950</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
+
+    <!-- ── FOOTER ────────────────────────────────────────────────── -->
+    <footer class="footer">
+        <p>&copy; Reunion 2026. Empowering communities through transparent giving.</p>
+    </footer>
 
     <script>
         const mobileMenu = document.getElementById('mobileMenu');
@@ -1037,6 +377,7 @@
             toggleBtn.classList.toggle('open', isOpen);
         }
 
+        // Close when tapping a link
         mobileMenu.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.remove('active');
@@ -1044,6 +385,7 @@
             });
         });
 
+        // Close when clicking outside the navbar
         document.addEventListener('click', function (e) {
             if (!e.target.closest('.navbar')) {
                 mobileMenu.classList.remove('active');
@@ -1051,32 +393,12 @@
             }
         });
 
+        // Clean up on resize to desktop
         window.addEventListener('resize', function () {
             if (window.innerWidth > 768) {
                 mobileMenu.classList.remove('active');
                 toggleBtn.classList.remove('open');
             }
-        });
-
-        // Animate progress bars on load
-        window.addEventListener('load', function() {
-            const progressBars = document.querySelectorAll('.category-progress-bar');
-            progressBars.forEach((bar, index) => {
-                const width = bar.style.width;
-                bar.style.width = '0%';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 100 + (index * 100));
-            });
-
-            // Period selector functionality
-            const selectors = document.querySelectorAll('.period-selector');
-            selectors.forEach(selector => {
-                selector.addEventListener('click', function() {
-                    selectors.forEach(s => s.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
         });
     </script>
 </body>
