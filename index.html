@@ -254,30 +254,30 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+
             .nav-container {
                 padding: 0 20px;
-            }
+                flex-wrap: wrap;   /* ADD THIS LINE */
+                }
 
             .menu-toggle {
                 display: flex;
-            }
-
-           .nav-menu {
-                position: absolute;
-                top: 100%;   /* attach directly below navbar */
-                left: 0;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                gap: 0;
-                padding: 20px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                display: none;
                 }
 
-            .nav-menu.active {
-                display: flex;
-            }
+    .nav-menu {
+        position: static;   /* if you're using push-down version */
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        gap: 0;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
 
             .nav-link {
                 padding: 15px 20px;
