@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Reunion 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold:    #c9a84c;
+            --gold-lt: #e8c96e;
+            --navy:    #0f1e35;
+            --navy-md: #1a3050;
+            --cream:   #fdf8f0;
+            --slate:   #64748b;
+            --white:   #ffffff;
+            --radius:  18px;
+            --shadow:  0 8px 32px rgba(15,30,53,0.10);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--navy);
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR ──────────────────────────────────────────── */
+        .navbar {
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 2px 16px rgba(15,30,53,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container { max-width:1300px; margin:0 auto; padding:0 40px; }
+        .nav-top {
+            display:flex; justify-content:space-between; align-items:center; height:68px;
+        }
+        .nav-logo {
+            font-family:'Playfair Display',serif; font-size:22px; font-weight:700;
+            color:var(--navy); text-decoration:none; display:flex; align-items:center; gap:8px;
+        }
+        .nav-logo span { color:var(--gold); }
+        .nav-menu-desktop { display:flex; gap:4px; list-style:none; }
+        .nav-link {
+            text-decoration:none; color:var(--navy); font-weight:600; font-size:15px;
+            padding:9px 16px; border-radius:9px; transition:all 0.25s; white-space:nowrap;
+        }
+        .nav-link:hover { background:#f1f5f9; }
+        .nav-link.active { background:var(--navy); color:var(--gold); }
+
+        .menu-toggle {
+            display:none; flex-direction:column; justify-content:center; gap:5px;
+            cursor:pointer; padding:8px; border-radius:8px; border:none; background:transparent;
+        }
+        .menu-toggle span {
+            display:block; width:24px; height:2.5px;
+            background:var(--navy); border-radius:3px; transition:all 0.3s;
+        }
+        .menu-toggle.open span:nth-child(1){ transform:translateY(7.5px) rotate(45deg); }
+        .menu-toggle.open span:nth-child(2){ opacity:0; }
+        .menu-toggle.open span:nth-child(3){ transform:translateY(-7.5px) rotate(-45deg); }
+
+        .nav-menu-mobile {
+            list-style:none; overflow:hidden; max-height:0;
+            transition:max-height 0.35s ease, padding 0.35s ease;
+        }
+        .nav-menu-mobile.active {
+            max-height:400px; padding-bottom:14px; border-top:1px solid #e2e8f0;
+        }
+        .nav-menu-mobile .nav-link {
+            display:block; padding:13px 20px; border-radius:0; border-bottom:1px solid #f1f5f9;
+        }
+        .nav-menu-mobile li:last-child .nav-link { border-bottom:none; }
+        .nav-menu-mobile .nav-link.active { border-radius:8px; margin:4px 12px; }
+
+        @media(max-width:768px){
+            .nav-container    { padding:0 18px; }
+            .nav-menu-desktop { display:none; }
+            .menu-toggle      { display:flex; }
+        }
+
+        /* ── PAGE WRAPPER ────────────────────────────────────── */
+        .page {
+            max-width:1300px; margin:0 auto;
+            padding:48px 24px 80px;
+            display:flex; flex-direction:column; gap:72px;
+        }
+
+        /* ── SECTION HEADING ─────────────────────────────────── */
+        .sec-head { text-align:center; margin-bottom:40px; }
+        .sec-label {
+            display:inline-block; font-size:12px; font-weight:600;
+            letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+        }
+        .sec-title {
+            font-family:'Playfair Display',serif;
+            font-size:clamp(28px,4vw,44px); font-weight:700; color:var(--navy); line-height:1.15;
+        }
+        .sec-line {
+            width:56px; height:3px;
+            background:linear-gradient(90deg,var(--gold),var(--gold-lt));
+            border-radius:2px; margin:14px auto 0;
+        }
+
+        /* ════════════════════════════════════════════════════════
+           1 · REUNION LOGO HERO
+        ════════════════════════════════════════════════════════ */
+        .logo-hero {
+            background:linear-gradient(135deg,var(--navy) 0%,var(--navy-md) 100%);
+            border-radius:24px; padding:64px 40px; text-align:center;
+            position:relative; overflow:hidden;
+        }
+        .logo-hero::before {
+            content:''; position:absolute; inset:0;
+            background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,0.18) 0%,transparent 70%);
+        }
+        .logo-hero::after {
+            content:''; position:absolute;
+            width:500px; height:500px;
+            border:1px solid rgba(201,168,76,0.10); border-radius:50%;
+            top:50%; left:50%; transform:translate(-50%,-50%);
+        }
+        .logo-emblem {
+            position:relative; z-index:2;
+            display:inline-flex; flex-direction:column; align-items:center; margin-bottom:28px;
+        }
+        .logo-ring {
+            width:180px; height:180px; border:3px solid var(--gold);
+            border-radius:50%; display:flex; align-items:center; justify-content:center;
+            position:relative; box-shadow:0 0 60px rgba(201,168,76,0.22);
+        }
+        .logo-ring::before {
+            content:''; position:absolute; inset:8px;
+            border:1px solid rgba(201,168,76,0.35); border-radius:50%;
+        }
+        /* Replace inner content with your logo image:
+           <img src="logo.png" alt="Logo" style="width:130px;height:130px;object-fit:contain;border-radius:50%;"> */
+        .logo-year {
+            font-family:'Playfair Display',serif; font-size:52px;
+            font-weight:900; color:var(--gold); line-height:1;
+        }
+        .logo-sub {
+            font-size:11px; letter-spacing:4px; text-transform:uppercase;
+            color:rgba(201,168,76,0.65); margin-top:3px;
+        }
+        .logo-hero-title {
+            font-family:'Playfair Display',serif;
+            font-size:clamp(24px,4vw,44px); font-weight:900; color:var(--white);
+            position:relative; z-index:2; margin-bottom:12px;
+        }
+        .gold-divider {
+            width:80px; height:2px;
+            background:linear-gradient(90deg,transparent,var(--gold),transparent);
+            margin:18px auto; position:relative; z-index:2;
+        }
+        .logo-hero-sub {
+            font-size:16px; color:rgba(255,255,255,0.60);
+            position:relative; z-index:2;
+            max-width:520px; margin:0 auto; line-height:1.65;
+        }
+        .event-chips {
+            display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+            margin-top:26px; position:relative; z-index:2;
+        }
+        .event-chip {
+            background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.4);
+            color:var(--gold-lt); border-radius:30px; padding:7px 18px;
+            font-size:13px; font-weight:600;
+        }
+
+        /* ════════════════════════════════════════════════════════
+           2 · PROGRAM INDEX
+        ════════════════════════════════════════════════════════ */
+        .program-grid {
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px;
+        }
+        .program-card {
+            background:var(--white); border-radius:var(--radius);
+            padding:26px 28px; box-shadow:var(--shadow);
+            display:flex; gap:18px; align-items:flex-start;
+            border-left:4px solid var(--gold);
+            transition:transform 0.25s, box-shadow 0.25s;
+            animation:fadeUp 0.6s ease both;
+        }
+        .program-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(15,30,53,0.13); }
+        .program-num {
+            font-family:'Playfair Display',serif; font-size:30px;
+            font-weight:700; color:var(--gold); line-height:1; min-width:38px;
+        }
+        .program-time {
+            font-size:11px; font-weight:600; letter-spacing:1px;
+            text-transform:uppercase; color:var(--gold); margin-bottom:5px;
+        }
+        .program-name {
+            font-family:'Playfair Display',serif; font-size:17px;
+            font-weight:700; color:var(--navy); margin-bottom:5px;
+        }
+        .program-desc { font-size:13px; color:var(--slate); line-height:1.5; }
+
+        /* ════════════════════════════════════════════════════════
+           3 · COMMITTEE MEMBERS
+        ════════════════════════════════════════════════════════ */
+        .committee-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:24px;
+        }
+        .member-card {
+            background:var(--white); border-radius:var(--radius);
+            overflow:hidden; box-shadow:var(--shadow); text-align:center;
+            transition:transform 0.3s, box-shadow 0.3s;
+            animation:fadeUp 0.6s ease both;
+        }
+        .member-card:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(15,30,53,0.14); }
+        .member-img-wrap {
+            position:relative;
+            background:linear-gradient(135deg,var(--navy),var(--navy-md));
+            height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden;
+        }
+        .member-img-wrap::after {
+            content:''; position:absolute; bottom:0; left:0; right:0; height:50%;
+            background:linear-gradient(transparent,rgba(15,30,53,0.45));
+        }
+        .member-img {
+            width:130px; height:130px; border-radius:50%; object-fit:cover;
+            border:3px solid var(--gold); box-shadow:0 4px 20px rgba(0,0,0,0.28);
+            position:relative; z-index:1;
+        }
+        .member-role-badge {
+            position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+            background:var(--gold); color:var(--navy);
+            font-size:10px; font-weight:700; letter-spacing:1.5px;
+            text-transform:uppercase; padding:4px 12px; border-radius:20px;
+            white-space:nowrap; z-index:2;
+        }
+        .member-body { padding:20px 16px 22px; }
+        .member-name {
+            font-family:'Playfair Display',serif; font-size:18px;
+            font-weight:700; color:var(--navy); margin-bottom:6px;
+        }
+        .member-detail { font-size:13px; color:var(--slate); line-height:1.55; margin-bottom:14px; }
+        .member-phone {
+            display:inline-flex; align-items:center; gap:6px;
+            background:var(--cream); border:1px solid #e5deca;
+            border-radius:30px; padding:7px 14px;
+            font-size:13px; font-weight:600; color:var(--navy);
+            text-decoration:none; transition:all 0.2s;
+        }
+        .member-phone:hover { background:var(--navy); color:var(--gold); border-color:var(--navy); }
+
+        /* ════════════════════════════════════════════════════════
+           4 · PHOTO GALLERY
+        ════════════════════════════════════════════════════════ */
+        .gallery-grid {
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            grid-auto-rows:200px;
+            gap:14px;
+        }
+        .gallery-item {
+            position:relative; border-radius:14px; overflow:hidden; cursor:pointer;
+        }
+        .gallery-item.hero { grid-column:span 2; grid-row:span 2; }
+
+        .gallery-img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
+        .gallery-item:hover .gallery-img { transform:scale(1.06); }
+
+        .gallery-overlay {
+            position:absolute; inset:0;
+            background:linear-gradient(180deg,transparent 40%,rgba(15,30,53,0.72) 100%);
+            opacity:0; transition:opacity 0.3s;
+            display:flex; align-items:flex-end; padding:16px;
+        }
+        .gallery-item:hover .gallery-overlay { opacity:1; }
+        .gallery-caption { font-size:13px; font-weight:600; color:white; line-height:1.3; }
+
+        /* Placeholder tiles */
+        .gallery-ph {
+            width:100%; height:100%;
+            background:linear-gradient(135deg,#e8ecf1 0%,#d4dde8 100%);
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+        }
+        .gallery-ph-icon { font-size:32px; opacity:0.5; }
+        .gallery-ph-text { font-size:12px; color:var(--slate); font-weight:500; text-align:center; padding:0 12px; }
+
+        .gallery-note {
+            text-align:center; margin-top:18px;
+            font-size:13px; color:var(--slate);
+            background:white; border:2px dashed #d4dde8;
+            border-radius:12px; padding:14px 22px; line-height:1.6;
+        }
+        .gallery-note strong { color:var(--navy); }
+        .gallery-note code {
+            background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display:none; position:fixed; inset:0;
+            background:rgba(8,15,26,0.93); z-index:9999;
+            align-items:center; justify-content:center; padding:20px;
+        }
+        .lightbox.open { display:flex; }
+        .lightbox-img { max-width:90vw; max-height:88vh; border-radius:12px; box-shadow:0 20px 80px rgba(0,0,0,0.5); }
+        .lightbox-close {
+            position:absolute; top:20px; right:26px;
+            font-size:36px; color:white; cursor:pointer; opacity:0.8; transition:opacity 0.2s;
+        }
+        .lightbox-close:hover { opacity:1; }
+
+        /* ── ANIMATIONS ──────────────────────────────────────── */
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(24px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ── RESPONSIVE ──────────────────────────────────────── */
+        @media(max-width:1000px){
+            .gallery-grid { grid-template-columns:repeat(3,1fr); }
+            .gallery-item.hero { grid-column:span 2; }
+        }
+        @media(max-width:680px){
+            .page { padding:24px 12px 60px; gap:52px; }
+            .logo-hero { padding:40px 18px; }
+            .logo-ring { width:140px; height:140px; }
+            .logo-year { font-size:40px; }
+            .gallery-grid { grid-template-columns:repeat(2,1fr); grid-auto-rows:160px; gap:10px; }
+            .gallery-item.hero { grid-column:span 2; grid-row:span 2; }
+            .committee-grid { grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:16px; }
+            .program-grid { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ──────────────────────────────────────────────────── -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-top">
+            <a href="index.html" class="nav-logo">💝 Reunion <span>2026</span></a>
+            <ul class="nav-menu-desktop">
+                <li><a href="index.html"      class="nav-link">Home</a></li>
+                <li><a href="funding.html"     class="nav-link">Funding</a></li>
+                <li><a href="expenditure.html" class="nav-link">Expenditure</a></li>
+                <li><a href="contact.html"     class="nav-link active">Contact</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <ul class="nav-menu-mobile" id="mobileMenu">
+            <li><a href="index.html"      class="nav-link">Home</a></li>
+            <li><a href="funding.html"     class="nav-link">Funding</a></li>
+            <li><a href="expenditure.html" class="nav-link">Expenditure</a></li>
+            <li><a href="contact.html"     class="nav-link active">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- ══════════════════════════════════════════════════════════
+         1 · REUNION LOGO HERO
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+        <div class="logo-hero">
+            <div class="logo-emblem">
+                <div class="logo-ring">
+                    <!-- 💡 TO USE YOUR LOGO IMAGE:
+                         Replace this div with:
+                         <img src="reunion-logo.png" alt="Reunion Logo"
+                              style="width:140px;height:140px;object-fit:contain;border-radius:50%;"> -->
+                    <div>
+                        <div class="logo-year">2026</div>
+                        <div class="logo-sub">Reunion</div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="logo-hero-title">Class Reunion — Batch 2000</h1>
+            <div class="gold-divider"></div>
+            <p class="logo-hero-sub">Celebrating friendships, memories, and the journey we shared together. Welcome back, classmates.</p>
+            <div class="event-chips">
+                <div class="event-chip">📅 June 15, 2026</div>
+                <div class="event-chip">📍 School Auditorium</div>
+                <div class="event-chip">⏰ 9:00 AM — 8:00 PM</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         2 · PROGRAM INDEX
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+        <div class="sec-head">
+            <div class="sec-label">Schedule of Events</div>
+            <h2 class="sec-title">Program Index</h2>
+            <div class="sec-line"></div>
+        </div>
+        <div class="program-grid">
+            <div class="program-card" style="animation-delay:0.05s">
+                <div class="program-num">01</div>
+                <div>
+                    <div class="program-time">09:00 AM</div>
+                    <div class="program-name">Registration &amp; Welcome</div>
+                    <div class="program-desc">Guests arrive, collect name tags, welcome refreshments at the main gate.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.10s">
+                <div class="program-num">02</div>
+                <div>
+                    <div class="program-time">10:00 AM</div>
+                    <div class="program-name">Opening Ceremony</div>
+                    <div class="program-desc">Inauguration by chief guest, national anthem, and tribute to teachers.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.15s">
+                <div class="program-num">03</div>
+                <div>
+                    <div class="program-time">11:00 AM</div>
+                    <div class="program-name">Memory Walk &amp; Campus Tour</div>
+                    <div class="program-desc">Guided tour of classrooms, library, labs, and the sports ground.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.20s">
+                <div class="program-num">04</div>
+                <div>
+                    <div class="program-time">12:30 PM</div>
+                    <div class="program-name">Group Photograph</div>
+                    <div class="program-desc">Official batch photo session for all reunion attendees on the main steps.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.25s">
+                <div class="program-num">05</div>
+                <div>
+                    <div class="program-time">01:30 PM</div>
+                    <div class="program-name">Lunch &amp; Fellowship</div>
+                    <div class="program-desc">Traditional lunch buffet. Time to reconnect, laugh, and reminisce.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.30s">
+                <div class="program-num">06</div>
+                <div>
+                    <div class="program-time">03:00 PM</div>
+                    <div class="program-name">Cultural Program</div>
+                    <div class="program-desc">Music, dance, recitations, and skit performances by alumni volunteers.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.35s">
+                <div class="program-num">07</div>
+                <div>
+                    <div class="program-time">05:00 PM</div>
+                    <div class="program-name">Award &amp; Recognition</div>
+                    <div class="program-desc">Honouring distinguished alumni and the reunion committee members.</div>
+                </div>
+            </div>
+            <div class="program-card" style="animation-delay:0.40s">
+                <div class="program-num">08</div>
+                <div>
+                    <div class="program-time">06:30 PM</div>
+                    <div class="program-name">Evening Dinner &amp; Closing</div>
+                    <div class="program-desc">Grand dinner, raffle draw, final speeches, and farewell to a beautiful day.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         3 · REUNION COMMITTEE
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+        <div class="sec-head">
+            <div class="sec-label">The Organising Team</div>
+            <h2 class="sec-title">Reunion Committee</h2>
+            <div class="sec-line"></div>
+        </div>
+        <div class="committee-grid">
+
+            <!-- ✏️ HOW TO CUSTOMISE EACH CARD:
+                 1. Replace src="https://i.pravatar.cc/..." with src="your-photo.jpg"
+                 2. Update member-name, member-detail, and the tel: href + display number
+                 3. Duplicate the block below to add more members                       -->
+
+            <div class="member-card" style="animation-delay:0.05s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Md. Rafiqul Islam" class="member-img">
+                    <div class="member-role-badge">President</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Md. Rafiqul Islam</div>
+                    <div class="member-detail">Batch 2000 · Civil Engineer<br>Dhaka, Bangladesh</div>
+                    <a href="tel:+8801711000001" class="member-phone">📞 +880 1711-000001</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.10s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=20" alt="Fatema Khatun" class="member-img">
+                    <div class="member-role-badge">Vice President</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Fatema Khatun</div>
+                    <div class="member-detail">Batch 2000 · School Teacher<br>Chittagong, Bangladesh</div>
+                    <a href="tel:+8801711000002" class="member-phone">📞 +880 1711-000002</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.15s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=15" alt="Kamal Hossain" class="member-img">
+                    <div class="member-role-badge">Secretary</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Kamal Hossain</div>
+                    <div class="member-detail">Batch 2000 · Software Engineer<br>Sylhet, Bangladesh</div>
+                    <a href="tel:+8801711000003" class="member-phone">📞 +880 1711-000003</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.20s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=33" alt="Nasrin Akter" class="member-img">
+                    <div class="member-role-badge">Treasurer</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Nasrin Akter</div>
+                    <div class="member-detail">Batch 2000 · Bank Manager<br>Rajshahi, Bangladesh</div>
+                    <a href="tel:+8801711000004" class="member-phone">📞 +880 1711-000004</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.25s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=52" alt="Tanvir Ahmed" class="member-img">
+                    <div class="member-role-badge">Cultural Secretary</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Tanvir Ahmed</div>
+                    <div class="member-detail">Batch 2000 · Journalist<br>Dhaka, Bangladesh</div>
+                    <a href="tel:+8801711000005" class="member-phone">📞 +880 1711-000005</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.30s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=44" alt="Sharmin Sultana" class="member-img">
+                    <div class="member-role-badge">Publicity Secretary</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Sharmin Sultana</div>
+                    <div class="member-detail">Batch 2000 · Media Professional<br>Khulna, Bangladesh</div>
+                    <a href="tel:+8801711000006" class="member-phone">📞 +880 1711-000006</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.35s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=60" alt="Jakir Hosen" class="member-img">
+                    <div class="member-role-badge">Sports Secretary</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Jakir Hosen</div>
+                    <div class="member-detail">Batch 2000 · Coach &amp; Trainer<br>Mymensingh, Bangladesh</div>
+                    <a href="tel:+8801711000007" class="member-phone">📞 +880 1711-000007</a>
+                </div>
+            </div>
+
+            <div class="member-card" style="animation-delay:0.40s">
+                <div class="member-img-wrap">
+                    <img src="https://i.pravatar.cc/150?img=47" alt="Roksana Begum" class="member-img">
+                    <div class="member-role-badge">IT Secretary</div>
+                </div>
+                <div class="member-body">
+                    <div class="member-name">Roksana Begum</div>
+                    <div class="member-detail">Batch 2000 · Web Developer<br>Comilla, Bangladesh</div>
+                    <a href="tel:+8801711000008" class="member-phone">📞 +880 1711-000008</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         4 · PHOTO GALLERY
+    ══════════════════════════════════════════════════════════ -->
+    <section>
+        <div class="sec-head">
+            <div class="sec-label">Memories &amp; Moments</div>
+            <h2 class="sec-title">School Photo Gallery</h2>
+            <div class="sec-line"></div>
+        </div>
+
+        <div class="gallery-grid">
+            <!-- HERO slot (spans 2×2) — replace gallery-ph with your image tag -->
+            <div class="gallery-item hero" onclick="openLightbox(this)">
+                <div class="gallery-ph">
+                    <div class="gallery-ph-icon">🏫</div>
+                    <div class="gallery-ph-text">Upload main school photo here<br><small>Replace &lt;div class="gallery-ph"&gt; with &lt;img src="school.jpg" class="gallery-img"&gt;</small></div>
+                </div>
+                <div class="gallery-overlay"><div class="gallery-caption">Our School</div></div>
+            </div>
+
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-ph"><div class="gallery-ph-icon">📚</div><div class="gallery-ph-text">Classroom memories</div></div>
+                <div class="gallery-overlay"><div class="gallery-caption">Class Days</div></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-ph"><div class="gallery-ph-icon">🏆</div><div class="gallery-ph-text">Prize giving ceremony</div></div>
+                <div class="gallery-overlay"><div class="gallery-caption">Prize Day</div></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-ph"><div class="gallery-ph-icon">⚽</div><div class="gallery-ph-text">Annual sports day</div></div>
+                <div class="gallery-overlay"><div class="gallery-caption">Sports Day</div></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-ph"><div class="gallery-ph-icon">🎭</div><div class="gallery-ph-text">Cultural programme</div></div>
+                <div class="gallery-overlay"><div class="gallery-caption">Cultural Show</div></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-ph"><div class="gallery-ph-icon">🎓</div><div class="gallery-ph-text">Graduation ceremony</div></div>
+                <div class="gallery-overlay"><div class="gallery-caption">Graduation Day</div></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-ph"><div class="gallery-ph-icon">🌳</div><div class="gallery-ph-text">School grounds</div></div>
+                <div class="gallery-overlay"><div class="gallery-caption">Our Campus</div></div>
+            </div>
+        </div>
+
+        <div class="gallery-note">
+            📷 <strong>To add your photos:</strong> Upload image files to GitHub, then replace each
+            <code>&lt;div class="gallery-ph"&gt;...&lt;/div&gt;</code>
+            with <code>&lt;img src="your-photo.jpg" class="gallery-img" alt="Caption"&gt;</code>
+        </div>
+    </section>
+
+</div><!-- end .page -->
+
+<!-- Lightbox overlay -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+    <img src="" alt="" class="lightbox-img" id="lightboxImg" onclick="event.stopPropagation()">
+</div>
+
+<script>
+    /* ── Nav toggle ── */
+    const mobileMenu = document.getElementById('mobileMenu');
+    const toggleBtn  = document.getElementById('menuToggle');
+    function toggleMenu() {
+        const open = mobileMenu.classList.toggle('active');
+        toggleBtn.classList.toggle('open', open);
+    }
+    mobileMenu.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
+        mobileMenu.classList.remove('active'); toggleBtn.classList.remove('open');
+    }));
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.navbar')) {
+            mobileMenu.classList.remove('active'); toggleBtn.classList.remove('open');
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) { mobileMenu.classList.remove('active'); toggleBtn.classList.remove('open'); }
+    });
+
+    /* ── Lightbox ── */
+    function openLightbox(item) {
+        const img = item.querySelector('.gallery-img');
+        if (!img) return;
+        document.getElementById('lightboxImg').src = img.src;
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    /* ── Scroll-triggered card animations ── */
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.style.animationPlayState = 'running'; obs.unobserve(e.target); }});
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.program-card, .member-card').forEach(el => {
+        el.style.animationPlayState = 'paused';
+        obs.observe(el);
+    });
+</script>
+</body>
+</html>
