@@ -257,21 +257,27 @@
 
             .nav-container {
                 padding: 0 20px;
-                flex-wrap: wrap;   /* ADD THIS LINE */
+                flex-wrap: wrap; 
+                align-items: flex-start;/* ADD THIS LINE */
                 }
 
-            .menu-toggle {
+             .menu-toggle {
                 display: flex;
+                order: 2;
+                }
+             .logo {
+                order: 1;
                 }
 
     .nav-menu {
-        position: static;   /* if you're using push-down version */
+        order: 3;              /* FORCE it to next row */
         width: 100%;
+        position: static;
         background: white;
         flex-direction: column;
         gap: 0;
-        padding: 20px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px 0;       /* cleaner spacing */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         display: none;
     }
 
